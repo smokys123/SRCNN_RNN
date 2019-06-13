@@ -133,7 +133,7 @@ with tf.Session() as sess:
     merged = tf.summary.merge_all()
     writer = tf.summary.FileWriter('./logs', sess.graph)
     global_step = 0
-    for e in range(1000):
+    for e in range(1):
         total_cost = 0
         for i in range(2):
             input_images, output_images = sess.run([next_train_images, next_train_labels])
@@ -155,7 +155,7 @@ with tf.Session() as sess:
 
     for i in range(5):
         val_input_images = sess.run(next_val_images)
-        set5_outputs = sess.run(rnn_y3, rnn_h3, feed_dict={val_X: val_input_images})  # batch=1, 512, 512, rgb=1
+        set5_outputs = sess.run(val_rnn_y3, feed_dict={val_X: val_input_images})  # batch=1, 512, 512, rgb=1
         set5_outputs = np.array(set5_outputs)
         w = set5_outputs.shape[1]
         h = set5_outputs.shape[2]
