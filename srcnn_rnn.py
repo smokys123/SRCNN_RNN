@@ -47,7 +47,6 @@ train_dataset = tf.data.Dataset.from_tensor_slices((train_input_list, train_inpu
 test_dataset = tf.data.Dataset.from_tensor_slices((test_input_list, test_input_list))
 val_dataset = tf.data.Dataset.from_tensor_slices(get_set5_images())
 
-
 train_dataset = train_dataset.map(_crop_grayscale_function)
 test_dataset = test_dataset.map(_crop_grayscale_function)
 val_dataset = val_dataset.map(_val_image_function)
@@ -75,19 +74,8 @@ val_X = tf.placeholder(tf.float32, [None, None, None, 1], name='val_input_images
 Y = tf.placeholder(tf.float32, [None, 32, 32, 1], name='output_images')
 
 
-
 def rnn_model(x, y, h):
     with tf.variable_scope('srcnn_rnn1', reuse=tf.AUTO_REUSE):
-        """
-        conv1 = tf.layers.conv2d(inputs=x, filters=32, kernel_size=[3, 3],
-                                 padding='SAME', name='conv1')
-        z_conv = tf.layers.conv2d(inputs=conv1, filters=32, kernel_size=[3, 3], padding='SAME')
-        hidden = tf.nn.tanh(z_conv + h)
-        h_conv = tf.layers.conv2d(inputs=hidden, filters=32, kernel_size=[3, 3], padding='SAME')
-        conv2 = tf.layers.conv2d(inputs=hidden, filters=32, kernel_size=[3, 3],
-                                 padding='SAME', activation=tf.nn.relu, name='conv2')
-        conv3 = tf.layers.conv2d(inputs=conv2, filters=1, kernel_size=[3, 3], padding='SAME')
-        """
         inputs = tf.concat([x, y], 3)
         z_conv = tf.layers.conv2d(inputs=inputs, filters=32, kernel_size=[3, 3], padding='SAME')
         hidden = tf.nn.tanh(z_conv + h)
@@ -133,7 +121,7 @@ with tf.Session() as sess:
     merged = tf.summary.merge_all()
     writer = tf.summary.FileWriter('./logs', sess.graph)
     global_step = 0
-    for e in range(1):
+    for e in range(5000):
         total_cost = 0
         for i in range(2):
             input_images, output_images = sess.run([next_train_images, next_train_labels])
